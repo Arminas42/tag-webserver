@@ -24,7 +24,7 @@ public class PricingController {
 
     @GetMapping("pricing")
     List<Pricing> getAllPricing() {
-        return Collections.emptyList();
+        return pricingRepository.findAll();
     }
 
     @GetMapping("pricing/{id}")

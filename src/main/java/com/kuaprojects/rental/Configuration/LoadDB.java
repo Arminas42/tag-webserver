@@ -21,8 +21,8 @@ public class LoadDB {
     CommandLineRunner initDatabase(TrailerRepository repository) {
 
         return args -> {
-            log.info("Preloading " + repository.save(new Trailer("newTrailer", "tent trailer")));
-            log.info("Preloading " + repository.save(new Trailer("Car trailer", "car trailer")));
+            log.info("Preloading " + repository.save(new Trailer("newTrailer", "TRAILER_200_CM")));
+            log.info("Preloading " + repository.save(new Trailer("Car trailer", "TRAILER_200_CM")));
         };
     }
 }

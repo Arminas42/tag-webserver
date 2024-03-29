@@ -1,13 +1,14 @@
 package com.kuaprojects.rental.Pricing;
 
-import org.springframework.cache.annotation.Cacheable;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.QueryHints;
 
 import java.util.List;
 
 public interface PricingRepository extends JpaRepository<Pricing, Long> {
 
     @Override
-    @Cacheable("pricingList")
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     List<Pricing> findAll();
 }

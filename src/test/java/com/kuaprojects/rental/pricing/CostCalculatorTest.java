@@ -4,8 +4,6 @@ import com.kuaprojects.rental.Pricing.CostCalculatorImpl;
 import com.kuaprojects.rental.Pricing.PaymentStrategy;
 import com.kuaprojects.rental.Pricing.Pricing;
 import com.kuaprojects.rental.Rent.Rent;
-import com.kuaprojects.rental.Trailer.Trailer;
-import com.kuaprojects.rental.Trailer.TrailerType;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -15,29 +13,11 @@ import java.util.List;
 
 import static com.kuaprojects.rental.TestUtil.createPricing;
 import static com.kuaprojects.rental.TestUtil.createRent;
-import static java.time.temporal.ChronoUnit.HOURS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CostCalculatorTest {
 
-
-//    @Test
-    void test_calculate_time_difference() {
-        var currentTime = LocalDateTime.now();
-        var sixHourTimeDifference = currentTime.minusHours(6L);
-        Long timeDifference = HOURS.between(currentTime, sixHourTimeDifference);
-        System.out.println("Time difference: " + timeDifference);
-        for (var value: TrailerType.values()) {
-        System.out.println(value);
-
-        }
-        var mytype = TrailerType.valueOf("TRAILER_200_CM");
-        System.out.println("Type name: *** " + mytype.name());
-        assertNotNull(timeDifference);
-
-    }
 
     @Test
     void testCalculateSingleRentCost_ByDay() {
