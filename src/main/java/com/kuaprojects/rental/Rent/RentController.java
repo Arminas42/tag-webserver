@@ -33,7 +33,7 @@ class RentController {
                         rentDto.getDriverFullName());
     }
 
-    @PatchMapping("/rent/{id}")
+    @PatchMapping("/rent/{rentId}")
     Rent endRent(@PathVariable Long rentId){
         return rentService.endRent(rentId);
     }
