@@ -1,10 +1,8 @@
 package com.kuaprojects.rental.rent;
 
-import com.kuaprojects.rental.Rent.RentRepository;
-import com.kuaprojects.rental.Rent.RentServiceImpl;
 import com.kuaprojects.rental.TestUtil;
-import com.kuaprojects.rental.Trailer.Trailer;
-import com.kuaprojects.rental.Trailer.TrailerRepository;
+import com.kuaprojects.rental.trailer.Trailer;
+import com.kuaprojects.rental.trailer.TrailerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

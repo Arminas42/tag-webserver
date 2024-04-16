@@ -1,9 +1,6 @@
 package com.kuaprojects.rental.pricing;
 
-import com.kuaprojects.rental.Pricing.CostCalculatorImpl;
-import com.kuaprojects.rental.Pricing.PaymentStrategy;
-import com.kuaprojects.rental.Pricing.Pricing;
-import com.kuaprojects.rental.Rent.Rent;
+import com.kuaprojects.rental.rent.Rent;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

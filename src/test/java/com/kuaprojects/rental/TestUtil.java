@@ -1,11 +1,11 @@
 package com.kuaprojects.rental;
 
-import com.kuaprojects.rental.Pricing.PaymentStrategy;
-import com.kuaprojects.rental.Pricing.Pricing;
-import com.kuaprojects.rental.Rent.Rent;
-import com.kuaprojects.rental.Rent.RentStatus;
-import com.kuaprojects.rental.Trailer.Trailer;
-import com.kuaprojects.rental.Trailer.TrailerType;
+import com.kuaprojects.rental.pricing.PaymentStrategy;
+import com.kuaprojects.rental.pricing.Pricing;
+import com.kuaprojects.rental.rent.Rent;
+import com.kuaprojects.rental.rent.RentStatus;
+import com.kuaprojects.rental.trailer.Trailer;
+import com.kuaprojects.rental.trailer.TrailerType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
