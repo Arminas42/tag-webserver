@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.kuaprojects.rental.TestUtil.createPricing;
 import static com.kuaprojects.rental.TestUtil.createRent;
+import static com.kuaprojects.rental.TestUtil.trailer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -79,4 +80,49 @@ public class CostCalculatorTest {
         assertEquals(BigDecimal.valueOf(150.0), earnings);
     }
 
+    @Test
+    void testCalculationDefaultsToOneHour_IfOnlyMinutesElapsed() {
+        CostCalculatorImpl costCalculator = new CostCalculatorImpl();
+        List<Pricing> pricingList = List.of(
+                createPricing(PaymentStrategy.BY_HOUR, BigDecimal.valueOf(10.0), BigDecimal.valueOf(100.0))
+        );
+        List<Rent> rentList = List.of(
+                createRent(LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), null)
+        );
+
+        BigDecimal earnings = costCalculator.calculateTimePeriodEarnings(pricingList, rentList);
+        assertEquals(BigDecimal.valueOf(10.0), earnings);
+    }
+
+    @Test
+    void testCalculationDefaultsToLowerBound() {
+        CostCalculatorImpl costCalculator = new CostCalculatorImpl();
+        List<Pricing> pricingList = List.of(
+                createPricing(PaymentStrategy.BY_HOUR, BigDecimal.valueOf(10.0), BigDecimal.valueOf(100.0))
+        );
+        List<Rent> rentList = List.of(
+                createRent(LocalDateTime.now(), LocalDateTime.now().plusHours(1).plusMinutes(25), trailer)
+        );
+
+        BigDecimal earnings = costCalculator.calculateTimePeriodEarnings(pricingList, rentList);
+        assertEquals(BigDecimal.valueOf(10.0), earnings);
+    }
+
+    @Test
+    void testCalculationThrowsException_WhenMultiplePricingsExistOfTheSameType() {
+        CostCalculatorImpl costCalculator = new CostCalculatorImpl();
+        List<Pricing> pricingList = Arrays.asList(
+                createPricing(PaymentStrategy.BY_DAY, BigDecimal.valueOf(10.0), BigDecimal.valueOf(50.0)),
+                createPricing(PaymentStrategy.BY_HOUR, BigDecimal.valueOf(10.0), BigDecimal.valueOf(100.0))
+        );
+        List<Rent> rentList = Arrays.asList(
+                createRent(LocalDateTime.now(), LocalDateTime.now().plusDays(2), null),
+                createRent(LocalDateTime.now(), LocalDateTime.now().plusHours(5), null)
+        );
+
+        Exception exception =
+                assertThrows(CalculationException.class,
+                        () -> costCalculator.calculateTimePeriodEarnings(pricingList, rentList));
+        assertEquals("Multiple pricings for the same trailer type", exception.getMessage());
+    }
 }

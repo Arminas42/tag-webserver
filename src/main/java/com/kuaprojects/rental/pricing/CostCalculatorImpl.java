@@ -51,9 +51,12 @@ public class CostCalculatorImpl implements CostCalculator {
     }
 
     private Pricing getRentPricingObject(List<Pricing> locationPricingList, TrailerType trailerType) {
-        return locationPricingList.stream()
-                .filter(pricing -> pricing.getTrailerType().equals(trailerType))
-                .findFirst()
+        var filteredPricings = locationPricingList.stream()
+                .filter(pricing -> pricing.getTrailerType().equals(trailerType));
+
+        if (filteredPricings.count() > 1) throw new CalculationException("Multiple pricings for the same trailer type");
+
+        return filteredPricings.findFirst()
                 .orElseThrow(() -> new CalculationException("Could not find appropriate pricing"));
     }
 }

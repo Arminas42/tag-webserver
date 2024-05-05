@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class TestUtil {
 
-    private final static Trailer trailer = new Trailer("something", "TRAILER_200_CM");
+    public final static Trailer trailer = new Trailer("something", "TRAILER_200_CM");
     private final static Trailer trailer_2 = new Trailer("something", "TRAILER_300_CM");
 
     public static Pricing createPricing(PaymentStrategy paymentStrategy, BigDecimal costByHour, BigDecimal costByDay) {
