@@ -1,5 +1,9 @@
-package com.kuaprojects.rental.rent;
+package com.kuaprojects.rental.integration;
 
+import com.kuaprojects.rental.rent.RentNotFoundException;
+import com.kuaprojects.rental.rent.RentRepository;
+import com.kuaprojects.rental.rent.RentServiceImpl;
+import com.kuaprojects.rental.rent.RentStatus;
 import com.kuaprojects.rental.trailer.Trailer;
 import com.kuaprojects.rental.trailer.TrailerNotFoundException;
 import com.kuaprojects.rental.trailer.TrailerRepository;

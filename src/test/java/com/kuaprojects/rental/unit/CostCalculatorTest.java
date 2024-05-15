@@ -1,5 +1,9 @@
-package com.kuaprojects.rental.pricing;
+package com.kuaprojects.rental.unit;
 
+import com.kuaprojects.rental.pricing.CalculationException;
+import com.kuaprojects.rental.pricing.CostCalculatorImpl;
+import com.kuaprojects.rental.pricing.PaymentStrategy;
+import com.kuaprojects.rental.pricing.Pricing;
 import com.kuaprojects.rental.rent.Rent;
 import org.junit.jupiter.api.Test;
 

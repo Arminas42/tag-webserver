@@ -1,6 +1,7 @@
-package com.kuaprojects.rental.rent;
+package com.kuaprojects.rental.integration;
 
 import com.kuaprojects.rental.TestUtil;
+import com.kuaprojects.rental.rent.RentRepository;
 import com.kuaprojects.rental.trailer.Trailer;
 import com.kuaprojects.rental.trailer.TrailerRepository;
 import org.junit.jupiter.api.Test;
