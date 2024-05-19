@@ -2,7 +2,9 @@ package com.kuaprojects.rental.tag;
 
 import com.kuaprojects.rental.trailer.TrailerNotFoundException;
 import com.kuaprojects.rental.trailer.TrailerRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TrailerRepository trailerRepository;
