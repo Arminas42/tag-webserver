@@ -19,17 +19,17 @@ import lombok.Setter;
 @Setter
 public class Tag {
 
-    public Tag(String tagDeviceCode, Trailer trailer){
-        this.tagDeviceCode = tagDeviceCode;
+    public Tag(String tagCode, Trailer trailer){
+        this.tagCode = tagCode;
         this.trailer = trailer;
     }
-    public Tag(String tagDeviceCode){
-        this.tagDeviceCode = tagDeviceCode;
+    public Tag(String tagCode){
+        this.tagCode = tagCode;
     }
     @GeneratedValue
     @Id
     private Long id;
-    private String tagDeviceCode;
+    private String tagCode;
     @ManyToOne
     private Trailer trailer;
 }

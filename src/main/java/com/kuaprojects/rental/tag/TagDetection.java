@@ -23,8 +23,7 @@ public class TagDetection {
     @GeneratedValue
     @Id
     private Long id;
-    @ManyToOne
-    private Tag tag;
+    private String tagCode;
     private LocalDateTime timeOfDetection;
 
 }

@@ -18,7 +18,7 @@ public class TagServiceImpl implements TagService {
     public Tag saveTag(String tagDeviceCode) {
         return tagRepository.save(
                 Tag.builder()
-                        .tagDeviceCode(tagDeviceCode)
+                        .tagCode(tagDeviceCode)
                         .build());
     }
 

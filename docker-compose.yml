@@ -1,0 +1,20 @@
+services:
+  rental-app:
+    build: .
+    container_name: rental-app
+    depends_on:
+      - postgres-db
+    environment:
+      - "SPRING_PROFILES_ACTIVE=production"
+    ports:
+      - "8080:8080"
+  postgres-db:
+    image: postgres
+    container_name: postgres-db
+    volumes:
+      - database_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+volumes:
+  database_data:
