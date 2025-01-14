@@ -1,4 +1,4 @@
-package com.kuaprojects.rental.tag;
+package com.kuaprojects.rental.security;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,19 +9,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class TagDetection {
+public class ApiKey {
     @GeneratedValue
     @Id
     private Long id;
-    private String tagCode;
-    private LocalDateTime timeOfDetection;
-
+    private String scope;
+    private String encryptedKey;
 }

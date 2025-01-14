@@ -1,20 +1,27 @@
 services:
-  rental-app:
-    build: .
-    container_name: rental-app
-    depends_on:
-      - postgres-db
-    environment:
-      - "SPRING_PROFILES_ACTIVE=production"
+  app:
+    image: 217661375233.dkr.ecr.eu-north-1.amazonaws.com/rent_app
+    container_name: rent-app
     ports:
       - "8080:8080"
-  postgres-db:
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - db
+  db:
     image: postgres
     container_name: postgres-db
-    volumes:
-      - database_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
 volumes:
-  database_data:
+  db_data:

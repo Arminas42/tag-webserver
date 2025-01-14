@@ -1,5 +1,6 @@
 package com.kuaprojects.rental.tag;
 
+import com.kuaprojects.rental.configuration.ApiPrefixController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@ApiPrefixController
 class TagController {
 
     private final TagService service;
@@ -21,7 +23,6 @@ class TagController {
 //        this.tagRepository = repository;
         this.tagDetectionRepository = tagDetectionRepository;
     }
-
     @PostMapping("tag/{tagId}")
     ResponseEntity<Tag> saveTag(@PathVariable String tagId) {
         var tag = service.saveTag(tagId);

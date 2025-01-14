@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface PricingRepository extends JpaRepository<Pricing, Long> {
 
+    //https://www.baeldung.com/ehcache
     @Override
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     List<Pricing> findAll();

@@ -22,4 +22,9 @@ public class HttpRequestTest {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/sanityCheck",
                 String.class)).contains("Alive");
     }
+    @Test
+    void tagRfidShouldReturnInvalidKey(){
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/tag/rfid",
+                String.class)).contains("Invalid API Key");
+    }
 }
