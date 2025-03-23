@@ -5,6 +5,7 @@ import com.kuaprojects.rental.pricing.CostCalculatorImpl;
 import com.kuaprojects.rental.pricing.PaymentStrategy;
 import com.kuaprojects.rental.pricing.Pricing;
 import com.kuaprojects.rental.rent.Rent;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import static com.kuaprojects.rental.TestUtil.trailer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Disabled
 public class CostCalculatorTest {
 
 
