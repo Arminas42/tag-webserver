@@ -5,7 +5,6 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -13,9 +12,6 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.stream.Collectors;
 
 public class AppLayoutAdmin extends AppLayout {
 
@@ -47,12 +43,14 @@ public class AppLayoutAdmin extends AppLayout {
     SideNav getSideNav(){
         SideNav nav = new SideNav();
 
+        SideNavItem tagDetectionLink = new SideNavItem("Aptikti žymekliai",
+                TagDetectionView.class, VaadinIcon.ABACUS.create());
         SideNavItem tagLink = new SideNavItem("Žymekliai",
-                MainView.class, VaadinIcon.ABACUS.create());
+                TagView.class, VaadinIcon.AUTOMATION.create());
         SideNavItem ieskauPriekabosLink = new SideNavItem("Vartotojų puslapis",
                 "https://ieskaupriekabos.lt", VaadinIcon.GLOBE_WIRE.create());
 
-        nav.addItem(tagLink, ieskauPriekabosLink);
+        nav.addItem(tagDetectionLink, tagLink, ieskauPriekabosLink);
 
         return nav;
     }

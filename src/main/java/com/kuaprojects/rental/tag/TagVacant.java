@@ -11,17 +11,20 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class TagDetection {
+public class TagVacant {
     @GeneratedValue
     @Id
     private Long id;
     private String tagCode;
-    private LocalDateTime detectionTime;
+    private LocalDateTime vacantFrom;
+    private LocalDateTime vacantTo;
+    private ProcessingStatus status;
 
 }

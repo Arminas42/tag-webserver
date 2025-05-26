@@ -20,25 +20,30 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static com.kuaprojects.rental.configuration.StaticData.getStaticTagDetections;
 
 @Configuration
 public class LoadDB {
+
     private static final Logger log = LoggerFactory.getLogger(LoadDB.class);
 
     @Bean
     CommandLineRunner addAdminKey(ApiKeyRepository repository) {
         return args -> {
-            repository.save(new ApiKey(1L,"iot",  "$2y$12$Iy6tB.i35DrrtULLfMsml.EpKjehLTPFQOXVVKrkcIfILFhX2sIkW"));
+            repository.save(new ApiKey(1L, "iot", "$2y$12$Iy6tB.i35DrrtULLfMsml.EpKjehLTPFQOXVVKrkcIfILFhX2sIkW"));
         };
     }
 
     @ConditionalOnProperty(
-        prefix = "preload.database",
-        value = "enabled",
-        havingValue = "true")
+            prefix = "preload.database",
+            value = "enabled",
+            havingValue = "true")
     @Bean
     @Profile("dev")
-    CommandLineRunner initDatabase(TrailerRepository trailerRepository, RentRepository rentRepository, TagRepository tagRepository , TagDetectionRepository tagDetectionRepository) {
+    CommandLineRunner initDatabase(TrailerRepository trailerRepository, RentRepository rentRepository, TagRepository tagRepository, TagDetectionRepository tagDetectionRepository) {
 
         return args -> {
             var trailer = trailerRepository.save(new Trailer("newTrailer", "TRAILER_200_CM"));
@@ -67,12 +72,22 @@ public class LoadDB {
                     .build()));
             log.info("Preloading fake tags");
             preloadFakeTags(tagDetectionRepository);
+            log.info("Preloading tag detections");
+            var detections = getStaticTagDetections();
+            for (TagDetection td : detections
+            ) {
+                tagDetectionRepository.save(td);
+
+            }
+
         };
     }
 
     private void preloadFakeTags(TagDetectionRepository tagDetectionRepository) {
         for (int i = 0; i < 10; i++) {
-            tagDetectionRepository.save(new TagDetection((long) i,"test_tag_" + i, LocalDateTime.now()));
+            tagDetectionRepository.save(new TagDetection((long) i, "test_tag_" + i, LocalDateTime.now()));
         }
     }
+
+
 }

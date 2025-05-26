@@ -7,19 +7,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
+    private final TagDetectionRepository tagDetectionRepository;
     private final TrailerRepository trailerRepository;
 
-    public TagServiceImpl(TagRepository tagRepository, TrailerRepository trailerRepository) {
+    public TagServiceImpl(TagRepository tagRepository, TrailerRepository trailerRepository, TagDetectionRepository tagDetectionRepository) {
         this.tagRepository = tagRepository;
+        this.tagDetectionRepository = tagDetectionRepository;
         this.trailerRepository = trailerRepository;
     }
 
+//    @Override
+//    public Tag saveTag(String tagDeviceCode) {
+//        return tagRepository.save(
+//                Tag.builder()
+//                        .tagCode(tagDeviceCode)
+//                        .build());
+//    }
+
     @Override
-    public Tag saveTag(String tagDeviceCode) {
-        return tagRepository.save(
-                Tag.builder()
-                        .tagCode(tagDeviceCode)
-                        .build());
+    public Tag createTag(String tagCode) {
+        if(tagRepository.findByTagCode(tagCode).isPresent()) throw new TagAlreadyExistsException(tagCode);
+        return tagRepository.save(Tag.builder()
+                .tagCode(tagCode)
+                .build());
     }
 
     @Override
@@ -38,4 +48,5 @@ public class TagServiceImpl implements TagService {
                 .orElseThrow(() -> new RuntimeException("No tag found with id: " + id));
         tagRepository.delete(tag);
     }
+
 }
