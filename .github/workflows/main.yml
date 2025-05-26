@@ -1,4 +1,4 @@
-name: Deploy Java App with Docker to EC2
+name: Deploy Tag Webserver
 
 on:
   push:
@@ -23,7 +23,8 @@ jobs:
 
       - name: Build Java App (JAR)
         run: |
-          ./gradlew build  # or mvn package depending on your build tool
+          chmod +x ./gradlew
+          ./gradlew build
           ls build/libs || ls target
 
       - name: Copy App to EC2
@@ -35,8 +36,8 @@ jobs:
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/${USER}
-            docker stop app || true
-            docker rm app || true
-            docker build -t tag-webserver -f Dockerfile .
-            docker run -d --name app -p 8080:8080 tag-webserver
+            sudo docker stop app || true
+            sudo docker rm app || true
+            sudo docker build -t tag-webserver -f Dockerfile .
+            sudo docker run -d --name app -p 8080:8080 tag-webserver
           EOF
