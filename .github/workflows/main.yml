@@ -1,0 +1,41 @@
+name: Deploy Java App with Docker to EC2
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Build Java App (JAR)
+        run: |
+          ./gradlew build  # or mvn package depending on your build tool
+          ls build/libs || ls target
+
+      - name: Copy App to EC2
+        run: |
+          scp build/libs/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/app.jar
+          scp Dockerfile ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/Dockerfile
+
+      - name: SSH and Run Docker on EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /home/${USER}
+            docker stop app || true
+            docker rm app || true
+            docker build -t tag-webserver -f Dockerfile .
+            docker run -d --name app -p 8080:8080 tag-webserver
+          EOF
