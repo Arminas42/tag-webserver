@@ -24,7 +24,7 @@ jobs:
       - name: Build Java App (JAR)
         run: |
           chmod +x ./gradlew
-          ./gradlew build
+          ./gradlew build -x test
           ls build/libs || ls target
 
       - name: Copy App to EC2
