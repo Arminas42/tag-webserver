@@ -39,5 +39,5 @@ jobs:
             sudo docker stop app || true
             sudo docker rm app || true
             sudo docker build -t tag-webserver -f Dockerfile .
-            sudo docker run -d --name app -p 8080:8080 tag-webserver
+            sudo docker compose up
           EOF
