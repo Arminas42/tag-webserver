@@ -104,7 +104,12 @@ public class TagView extends VerticalLayout {
 
         displayResultsListenerSetup();
 
-        dateRangeComboBox.addValueChangeListener(event -> selectionDateDivText.setText("Selected: " + getRange(event.getValue())));
+        dateRangeComboBox.addValueChangeListener(event -> {
+                var range = getRange(event.getValue());
+                selectedRange = range;
+                selectionDateDivText.setText("Selected: " + range);
+                }
+        );
 
         searchFieldSetup(searchField);
 
@@ -131,7 +136,7 @@ public class TagView extends VerticalLayout {
         contentStyling(content);
         content.add(tagDiv, vacancyDiv);
 
-        add(content , chartDiv);
+        add(content, chartDiv);
     }
 
     private void tagGridSelectionListenerSetup(Text selectionTagDivText) {
@@ -191,7 +196,7 @@ public class TagView extends VerticalLayout {
                 vacancyGrid.setItems(mappedItems);
             }
 
-            if (multipleSelectionTags.size() > 1) {
+            if (!multipleSelectionTags.isEmpty()) {
                 displayChart(multipleSelectionTags);
             }
         });
@@ -301,10 +306,11 @@ public class TagView extends VerticalLayout {
         chartDiv.add(chart);
     }
 
-    private Div createChartDiv(){
+    private Div createChartDiv() {
         var div = new Div();
-        div.setWidth("2.5em");
-        div.setHeight("2.5em");
+        div.setWidth("100%");
+        div.setHeight("400px"); // or use "100%" if inside a flex/grid layout with controlled height
+        div.getStyle().set("padding", "1em"); // optional, for spacing
         return div;
     }
 }
