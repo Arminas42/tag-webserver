@@ -6,6 +6,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -29,11 +30,17 @@ public class AppLayoutAdmin extends AppLayout {
 
         HorizontalLayout header;
         if (securityService.getAuthenticatedUser() != null) {
-            Button logout = new Button("Atsijungti", click ->
-                    securityService.logout());
+            Button logout = new Button("Atsijungti", click -> securityService.logout());
+
             header = new HorizontalLayout(title, logout);
+            header.setWidthFull();
+            header.expand(title);
+            header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+            header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+
         } else {
             header = new HorizontalLayout(title);
+            header.setWidthFull();
         }
 
         addToDrawer(scroller);
