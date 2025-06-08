@@ -256,11 +256,6 @@ public class TagView extends VerticalLayout {
         uniqueTagDiv.getStyle().setBoxSizing(Style.BoxSizing.BORDER_BOX);
     }
 
-    // Optional getter if needed elsewhere
-    public Utils.DateTimeRange getSelectedRange() {
-        return selectedRange;
-    }
-
 
     public class TimeLineChart extends ApexChartsBuilder {
         public TimeLineChart(Series<ColorDateTimeCoordinate>... coordinateSeries) {
@@ -296,7 +291,7 @@ public class TagView extends VerticalLayout {
             var coords = vacancies.stream()
                     .filter(x -> StringUtils.equals(x.getTagCode(), code))
                     .filter(x -> ObjectUtils.isNotEmpty(x.getVacantTo()))
-                    .map(item -> new ColorDateTimeCoordinate<>(color, "vacant", item.getVacantFrom(), item.getVacantTo())).toArray(ColorDateTimeCoordinate[]::new);
+                    .map(item -> new ColorDateTimeCoordinate<>(color, "", item.getVacantFrom(), item.getVacantTo())).toArray(ColorDateTimeCoordinate[]::new);
 
             var series = new Series<>(code, coords);
             seriesList.add(series);
@@ -308,8 +303,10 @@ public class TagView extends VerticalLayout {
 
     private Div createChartDiv() {
         var div = new Div();
-        div.setWidth("100%");
-        div.setHeight("400px"); // or use "100%" if inside a flex/grid layout with controlled height
+        div.setMaxHeight("300px");
+        div.setMaxWidth("400px");
+//        div.setWidth("100%");
+//        div.setHeight("400px"); // or use "100%" if inside a flex/grid layout with controlled height
         div.getStyle().set("padding", "1em"); // optional, for spacing
         return div;
     }

@@ -34,8 +34,4 @@ public class AppUserController {
         return ResponseEntity.ok("User created!");
     }
 
-    @GetMapping("/user")
-    ResponseEntity<List<AppUser>> getUsers(){
-        return ResponseEntity.ok(userRepository.findAll());
-    }
 }

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.kuaprojects.rental.frontend.TagDetectionComponents.createTagDetectionDiv;
+import static com.kuaprojects.rental.frontend.TagDetectionComponents.createUniqueTagDiv;
 import static com.kuaprojects.rental.frontend.Utils.contentStyling;
 
 @Route(value = "ui", layout = AppLayoutAdmin.class)
@@ -32,7 +34,6 @@ import static com.kuaprojects.rental.frontend.Utils.contentStyling;
 public class TagDetectionView extends VerticalLayout {
     private final TagDetectionRepository repository;
     private final TagRepository tagRepository;
-    final TagDetectionComponents tagDetectionComponents;
     final Grid<TagDataView> dataViewGrid;
     private final TagInfoPanel tagInfoPanel = new TagInfoPanel();
 
@@ -40,18 +41,9 @@ public class TagDetectionView extends VerticalLayout {
         this.repository = repository;
         this.tagRepository = tagRepository;
         List<TagDetection> tags = this.repository.findAll();
-        this.tagDetectionComponents = new TagDetectionComponents(tags);
         this.dataViewGrid = new Grid<>(TagDataView.class);
 
-        dataViewGrid.setHeight("300px");
         dataViewGrid.setItems(getTagsData(tags));
-
-        var uniqueTagDiv = new Div(new H3("Unikalūs žymekliai"),
-                dataViewGrid);
-        uniqueTagDivStyling(uniqueTagDiv);
-
-
-        dataViewGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
         dataViewGrid.addSelectionListener(event -> {
             event.getFirstSelectedItem().ifPresentOrElse(selected -> {
@@ -60,24 +52,22 @@ public class TagDetectionView extends VerticalLayout {
             }, () -> updateTagInfoPanel(null));
         });
 
-        var content = new Div();
-        contentStyling(content);
-        content.add(uniqueTagDiv, tagDetectionComponents.getTagDetectionDiv());
+        var interactivePanel = new Div();
+        contentStyling(interactivePanel);
+        interactivePanel.add(createUniqueTagDiv(dataViewGrid), tagInfoPanel);
+
+        var historicDataPanel = new Div();
+        contentStyling(historicDataPanel);
+        historicDataPanel.add(createTagDetectionDiv(tags));
 
         add(
                 new H1("Administravimas"),
-                tagInfoPanel,
-                content
+                interactivePanel,
+                historicDataPanel
         );
 
     }
 
-    private void uniqueTagDivStyling(Div uniqueTagDiv) {
-        uniqueTagDiv.getStyle().set("flex", "1 1 50%");
-        uniqueTagDiv.getStyle().setPadding("5px");
-        uniqueTagDiv.getStyle().setMinWidth("300px");
-        uniqueTagDiv.getStyle().setBoxSizing(Style.BoxSizing.BORDER_BOX);
-    }
 
     public List<TagDataView> getTagsData(List<TagDetection> tags) {
         var uniqueTagCodes = new HashSet<String>(tags.stream().map(TagDetection::getTagCode).toList());
@@ -128,10 +118,4 @@ public class TagDetectionView extends VerticalLayout {
 
     }
 
-    @Data
-    @AllArgsConstructor
-    public class TagDataView {
-        String tagCode;
-        long detectionCount;
-    }
 }

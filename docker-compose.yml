@@ -1,7 +1,19 @@
 services:
+  proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/secrets/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt:ro
+      - ./nginx/secrets/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key:ro
+    depends_on:
+      - app
   app:
-    image: 217661375233.dkr.ecr.eu-north-1.amazonaws.com/rent_app
-    container_name: rent-app
+    image: tag-webserver:latest
+    container_name: tag-webserver
     ports:
       - "8080:8080"
     environment:

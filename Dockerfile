@@ -1,3 +1,4 @@
 FROM openjdk:17-jdk-alpine
-COPY app.jar /app.jar
+#TODO: change before pushing
+COPY build/libs/app.jar /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
