@@ -1,4 +1,4 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.view;
 
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.builder.ChartBuilder;
@@ -8,9 +8,13 @@ import com.github.appreciated.apexcharts.config.builder.XAxisBuilder;
 import com.github.appreciated.apexcharts.config.builder.YAxisBuilder;
 import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.plotoptions.builder.BarBuilder;
+import com.github.appreciated.apexcharts.config.series.SeriesType;
 import com.github.appreciated.apexcharts.config.xaxis.XAxisType;
 import com.github.appreciated.apexcharts.helper.ColorDateTimeCoordinate;
 import com.github.appreciated.apexcharts.helper.Series;
+import com.kuaprojects.rental.frontend.utils.PagingObj;
+import com.kuaprojects.rental.frontend.utils.Utils;
+import com.kuaprojects.rental.frontend.model.TagVacantViewModel;
 import com.kuaprojects.rental.tag.Tag;
 import com.kuaprojects.rental.tag.TagDetectionFacade;
 import com.kuaprojects.rental.tag.TagDetectionRepository;
@@ -43,51 +47,51 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.kuaprojects.rental.frontend.Utils.contentStyling;
-import static com.kuaprojects.rental.frontend.Utils.generateRandomHexColor;
-import static com.kuaprojects.rental.frontend.Utils.getRange;
+import static com.kuaprojects.rental.frontend.utils.Utils.contentStyling;
+import static com.kuaprojects.rental.frontend.utils.Utils.createButtonLayout;
+import static com.kuaprojects.rental.frontend.utils.Utils.generateRandomHexColor;
+import static com.kuaprojects.rental.frontend.utils.Utils.getRange;
 
 @Route(value = "tags", layout = AppLayoutAdmin.class)
 @RolesAllowed("ROLE_ADMIN")
-public class TagView extends VerticalLayout {
+public class TagChartView extends VerticalLayout {
     private final TagDetectionRepository repository;
     private final TagRepository tagRepository;
     private final TagVacantRepository tagVacantRepository;
     private final TagDetectionFacade tagDetectionFacade;
     private final Grid<Tag> tagGrid;
-    private final Grid<TagVacantView> vacancyGrid;
+    private final Grid<TagVacantViewModel> vacancyGrid;
 
-    private int currentPage = 0;
-    private final int pageSize = 5;
+    private PagingObj pagingObj = new PagingObj();
 
-    private final Button previousButton = new Button("Previous");
-    private final Button nextButton = new Button("Next");
-    private final Button processVacancy = new Button("Process vacancy");
-    private final Button displayResults = new Button("Display results");
+    private final Button previousButton = new Button("Buvęs");
+    private final Button nextButton = new Button("Kitas");
+    private final Button processVacancy = new Button("Apskaičiuoti");
+    private final Button displayResults = new Button("Atvaizduoti rezultatus");
     private Utils.DateTimeRange selectedRange;
     private Tag selectedTag;
     private Set<Tag> multipleSelectionTags = new HashSet<>();
     Div chartDiv = createChartDiv();
 
-    public TagView(TagDetectionRepository repository, TagRepository tagRepository, TagVacantRepository tagVacantRepository, TagDetectionFacade tagDetectionFacade) {
+    public TagChartView(TagDetectionRepository repository, TagRepository tagRepository, TagVacantRepository tagVacantRepository, TagDetectionFacade tagDetectionFacade) {
         this.repository = repository;
         this.tagRepository = tagRepository;
         this.tagVacantRepository = tagVacantRepository;
         this.tagDetectionFacade = tagDetectionFacade;
         this.tagGrid = new Grid<>(Tag.class);
-        this.vacancyGrid = new Grid<>(TagVacantView.class);
+        this.vacancyGrid = new Grid<>(TagVacantViewModel.class);
         //styling
         tagGrid.setHeight("200px");
         vacancyGrid.setHeight("300px");
-        loadPage(currentPage);
+        loadPage(pagingObj.getCurrentPage());
 
         TextField searchField = new TextField();
-        searchField.setPlaceholder("Search by Tag Code");
+        searchField.setPlaceholder("Ieškoti pagal kodą");
         searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
         searchField.setClearButtonVisible(true);
 
-        ComboBox<String> dateRangeComboBox = new ComboBox<>("Select Date Range");
-        dateRangeComboBox.setItems("Yesterday", "Day Before Yesterday", "This week", "Last Week");
+        ComboBox<String> dateRangeComboBox = new ComboBox<>("Pasirinkti laiko tarpą");
+        dateRangeComboBox.setItems("Vakar", "Užvakar", "Ši savaitė", "Praėjusi savaitė");
 
         Text selectionTagDivText = new Text("");
         Text selectionDateDivText = new Text("");
@@ -98,7 +102,7 @@ public class TagView extends VerticalLayout {
         tagGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         //listeners
-        prevAndNextBtnSetup();
+        prevAndNextBtnSetup(previousButton, nextButton, pagingObj);
 
         processVacancyListenerSetup();
 
@@ -107,7 +111,7 @@ public class TagView extends VerticalLayout {
         dateRangeComboBox.addValueChangeListener(event -> {
                 var range = getRange(event.getValue());
                 selectedRange = range;
-                selectionDateDivText.setText("Selected: " + range);
+                selectionDateDivText.setText("Pasirinktas laiko tarpas: " + range);
                 }
         );
 
@@ -144,13 +148,12 @@ public class TagView extends VerticalLayout {
             var items = event.getAllSelectedItems();
             multipleSelectionTags.clear();
             if (items.size() > 1) {
-                Notification.show("Selected multiple tags");
-                selectionTagDivText.setText("Multiple selected");
+                selectionTagDivText.setText("Pasirinkta keletas žymeklių");
                 multipleSelectionTags.addAll(items);
             } else if (items.size() == 1) {
                 multipleSelectionTags.addAll(items);
                 event.getFirstSelectedItem().ifPresentOrElse(selected -> {
-                    Notification.show("Selected: " + selected.getTagCode());
+                    Notification.show("Pasirinkta: " + selected.getTagCode());
                     selectionTagDivText.setText("Tag kodas: " + selected.getTagCode());
                     setSelectedTag(selected);
                 }, () -> setSelectedTag(null));
@@ -167,9 +170,9 @@ public class TagView extends VerticalLayout {
                 previousButton.setEnabled(false);
                 nextButton.setEnabled(false);
             } else {
-                loadPage(currentPage);
-                previousButton.setEnabled(currentPage > 0);
-                nextButton.setEnabled(tagRepository.findAll(PageRequest.of(currentPage, pageSize)).hasNext());
+                loadPage(pagingObj.getCurrentPage());
+                previousButton.setEnabled(pagingObj.getCurrentPage() > 0);
+                nextButton.setEnabled(tagRepository.findAll(PageRequest.of(pagingObj.getCurrentPage(), pagingObj.getPageSize())).hasNext());
             }
         });
     }
@@ -183,7 +186,7 @@ public class TagView extends VerticalLayout {
                 var mappedItems = items
                         .stream()
                         .map(tagVacant -> {
-                                    var viewItem = TagVacantView.builder()
+                                    var viewItem = TagVacantViewModel.builder()
                                             .tagCode(tagVacant.getTagCode())
                                             .status(tagVacant.getStatus());
                                     if (ObjectUtils.isEmpty(tagVacant.getVacantTo())) {
@@ -207,22 +210,21 @@ public class TagView extends VerticalLayout {
             if (ObjectUtils.isNotEmpty(multipleSelectionTags) && ObjectUtils.isNotEmpty(selectedRange)) {
                 Notification.show("Using processVacancy not intended");
                 tagDetectionFacade.processDetections(selectedRange.getFrom(), selectedRange.getTo(), selectedRange.getTo().withHour(20));
-                Notification.show("Processed");
             }
         });
     }
 
-    private void prevAndNextBtnSetup() {
-        previousButton.addClickListener(e -> {
-            if (currentPage > 0) {
-                currentPage--;
-                loadPage(currentPage);
+    private void prevAndNextBtnSetup(Button prev, Button next, PagingObj pagingObj) {
+        prev.addClickListener(e -> {
+            if (pagingObj.getCurrentPage() > 0) {
+                pagingObj.decrementCurrentPage();
+                loadPage(pagingObj.getCurrentPage());
             }
         });
 
-        nextButton.addClickListener(e -> {
-            currentPage++;
-            loadPage(currentPage);
+        next.addClickListener(e -> {
+            pagingObj.incrementCurrentPage();
+            loadPage(pagingObj.getCurrentPage());
         });
     }
 
@@ -230,19 +232,10 @@ public class TagView extends VerticalLayout {
         this.selectedTag = selected;
     }
 
-    private HorizontalLayout createButtonLayout(Component... children) {
-        var layout = new HorizontalLayout(children);
-        layout.getStyle()
-                .set("border", "1px solid #ccc")
-                .set("background-color", "#f9f9f9")
-                .set("padding", "10px")
-                .set("border-radius", "5px")
-                .set("gap", "10px");
-        return layout;
-    }
+
 
     private void loadPage(int pageIndex) {
-        Page<Tag> page = tagRepository.findAll(PageRequest.of(pageIndex, pageSize));
+        Page<Tag> page = tagRepository.findAll(PageRequest.of(pageIndex, pagingObj.getPageSize()));
         tagGrid.setItems(page.getContent());
 
         previousButton.setEnabled(pageIndex > 0);
@@ -291,9 +284,10 @@ public class TagView extends VerticalLayout {
             var coords = vacancies.stream()
                     .filter(x -> StringUtils.equals(x.getTagCode(), code))
                     .filter(x -> ObjectUtils.isNotEmpty(x.getVacantTo()))
-                    .map(item -> new ColorDateTimeCoordinate<>(color, "", item.getVacantFrom(), item.getVacantTo())).toArray(ColorDateTimeCoordinate[]::new);
+                    .map(item -> new ColorDateTimeCoordinate<>(color, code, item.getVacantFrom(), item.getVacantTo())).toArray(ColorDateTimeCoordinate[]::new);
 
             var series = new Series<>(code, coords);
+//            series.setType(SeriesType.AREA);
             seriesList.add(series);
         }
         var chart = new TimeLineChart(seriesList.toArray(new Series[0])).build();
@@ -303,11 +297,18 @@ public class TagView extends VerticalLayout {
 
     private Div createChartDiv() {
         var div = new Div();
-        div.setMaxHeight("300px");
-        div.setMaxWidth("400px");
-//        div.setWidth("100%");
-//        div.setHeight("400px"); // or use "100%" if inside a flex/grid layout with controlled height
-        div.getStyle().set("padding", "1em"); // optional, for spacing
+        div.setMinHeight("400px");
+        div.setMinWidth("900px");
+        div.getStyle()
+                .set("padding", "1em")
+                .set("border", "2px solid #ccc")         // Add border
+                .set("display", "flex")                  // Use flexbox to center content
+                .set("align-items", "center")            // Vertical centering
+                .set("justify-content", "center")        // Horizontal centering
+                .set("text-align", "center");            // Ensure text is centered
+
+        div.setText("Pasirinkti duomenis norint atvaizduoti grafiką");                  // Add centered text
+
         return div;
     }
 }

@@ -1,4 +1,4 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.view;
 
 import com.kuaprojects.rental.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -53,11 +53,13 @@ public class AppLayoutAdmin extends AppLayout {
         SideNavItem tagDetectionLink = new SideNavItem("Aptikti žymekliai",
                 TagDetectionView.class, VaadinIcon.ABACUS.create());
         SideNavItem tagLink = new SideNavItem("Žymekliai",
-                TagView.class, VaadinIcon.AUTOMATION.create());
+                TagChartView.class, VaadinIcon.AUTOMATION.create());
+        SideNavItem hardwareLink = new SideNavItem("Įrenginiai",
+                HardwareView.class, VaadinIcon.CUBE.create());
         SideNavItem ieskauPriekabosLink = new SideNavItem("Vartotojų puslapis",
                 "https://ieskaupriekabos.lt", VaadinIcon.GLOBE_WIRE.create());
 
-        nav.addItem(tagDetectionLink, tagLink, ieskauPriekabosLink);
+        nav.addItem(tagDetectionLink, tagLink,hardwareLink, ieskauPriekabosLink);
 
         return nav;
     }

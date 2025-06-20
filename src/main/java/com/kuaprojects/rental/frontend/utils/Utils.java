@@ -1,6 +1,8 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.utils;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.dom.Style;
 
 import java.time.LocalDate;
@@ -19,22 +21,26 @@ public class Utils {
     public static DateTimeRange getRange(String option) {
         LocalDate today = LocalDate.now();
         switch (option) {
-            case "Yesterday":
+//            case "Yesterday":
+            case "Vakar":
                 return new DateTimeRange(
                         LocalDateTime.of(today.minusDays(1), LocalTime.MIN),
                         LocalDateTime.of(today.minusDays(1), LocalTime.MAX)
                 );
-            case "Day Before Yesterday":
+//            case "Day Before Yesterday":
+            case "Užvakar":
                 return new DateTimeRange(
                         LocalDateTime.of(today.minusDays(2), LocalTime.MIN),
                         LocalDateTime.of(today.minusDays(2), LocalTime.MAX)
                 );
-            case "This week":
+//            case "This week":
+            case "Ši savaitė":
                 return new DateTimeRange(
                         LocalDateTime.of(today.with(java.time.DayOfWeek.MONDAY), LocalTime.MIN),
                         LocalDateTime.of(today, LocalTime.MAX)
                 );
-            case "Last Week":
+//            case "Last Week":
+            case "Praėjusi savaitė":
                 LocalDate startOfWeek = today.minusWeeks(1).with(java.time.DayOfWeek.MONDAY);
                 LocalDate endOfWeek = startOfWeek.plusDays(6);
                 return new DateTimeRange(
@@ -73,5 +79,16 @@ public class Utils {
         Random random = new Random();
         int color = random.nextInt(0x1000000); // 0x1000000 = 16777216
         return String.format("#%06X", color); // Uppercase hex
+    }
+
+    public static HorizontalLayout createButtonLayout(Component... children) {
+        var layout = new HorizontalLayout(children);
+        layout.getStyle()
+                .set("border", "1px solid #ccc")
+                .set("background-color", "#f9f9f9")
+                .set("padding", "10px")
+                .set("border-radius", "5px")
+                .set("gap", "10px");
+        return layout;
     }
 }

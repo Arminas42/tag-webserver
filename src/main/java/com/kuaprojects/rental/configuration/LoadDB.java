@@ -11,6 +11,8 @@ import com.kuaprojects.rental.tag.TagDetectionRepository;
 import com.kuaprojects.rental.tag.TagRepository;
 import com.kuaprojects.rental.trailer.Trailer;
 import com.kuaprojects.rental.trailer.TrailerRepository;
+import com.kuaprojects.rental.user.AppUserDTO;
+import com.kuaprojects.rental.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -43,7 +45,7 @@ public class LoadDB {
             havingValue = "true")
     @Bean
     @Profile("dev")
-    CommandLineRunner initDatabase(TrailerRepository trailerRepository, RentRepository rentRepository, TagRepository tagRepository, TagDetectionRepository tagDetectionRepository) {
+    CommandLineRunner initDatabase(TrailerRepository trailerRepository, RentRepository rentRepository, TagRepository tagRepository, TagDetectionRepository tagDetectionRepository, UserService userService) {
 
         return args -> {
             var trailer = trailerRepository.save(new Trailer("newTrailer", "TRAILER_200_CM"));
@@ -79,7 +81,7 @@ public class LoadDB {
                 tagDetectionRepository.save(td);
 
             }
-
+            userService.createUser(AppUserDTO.builder().username("admin").password("admin").build());
         };
     }
 

@@ -1,4 +1,4 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.view;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
@@ -24,7 +24,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setAlignItems(Alignment.CENTER);
 
         login.setAction("login");
-        login.addLoginListener(loginEvent -> UI.getCurrent().navigate("/ui"));
+        login.addLoginListener(loginEvent -> UI.getCurrent().navigate("/"));
         add(new H1("Tag webserver"), login);
     }
 

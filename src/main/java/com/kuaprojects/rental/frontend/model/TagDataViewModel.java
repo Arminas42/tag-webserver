@@ -1,11 +1,11 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TagDataView {
+public class TagDataViewModel {
     String tagCode;
     long detectionCount;
 }

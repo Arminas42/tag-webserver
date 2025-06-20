@@ -3,7 +3,9 @@ package com.kuaprojects.rental.user;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 //TODO: change return types, decide if this service is needed or just use UserDetailsService
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService {
                     AppUser.builder()
                             .username(dto.getUsername())
                             .password(encoder.encode(dto.getPassword()))
-                            .role("ADMIN")
+                            .role("ROLE_ADMIN")
                             .build()
             );
         } catch (Exception e) {

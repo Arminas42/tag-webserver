@@ -1,4 +1,4 @@
-package com.kuaprojects.rental.frontend;
+package com.kuaprojects.rental.frontend.utils;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
@@ -13,6 +13,7 @@ public class TagInfoPanel extends VerticalLayout {
         this.setSpacing(true);
         this.getStyle()
                 .set("border", "1px solid lightgray")
+                .set("flex", "1 1 30%")
                 .set("padding", "1rem")
                 .set("background-color", "#f9f9f9")
                 .set("border", "1px solid #ccc")
