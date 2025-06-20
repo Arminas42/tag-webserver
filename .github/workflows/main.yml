@@ -40,8 +40,8 @@ jobs:
             cd /home/${USER}
             echo "${{ secrets.NGINX_CRT }}" > ~/nginx/secrets/nginx-selfsigned.crt
             echo "${{ secrets.NGINX_KEY }}" > ~/nginx/secrets/nginx-selfsigned.key
-            sudo docker stop app || true
-            sudo docker rm app || true
+            sudo docker stop tag-webserver || true
+            sudo docker rm tag-webserver || true
             sudo docker image prune -f
             sudo docker build -t tag-webserver -f Dockerfile .
             sudo docker compose up -d
