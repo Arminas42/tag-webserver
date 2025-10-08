@@ -40,3 +40,5 @@ docker-compose.yml
 /src/main/frontend/
 /node_modules
 /nginx/secrets
+
+.DS_Store
