@@ -23,6 +23,9 @@ vaadin {
 
 repositories {
 	mavenCentral()
+	maven {
+		setUrl("https://maven.vaadin.com/vaadin-addons")
+	}
 	flatDir {
 		dirs 'libs'
 	}

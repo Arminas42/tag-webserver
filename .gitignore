@@ -37,7 +37,8 @@ out/
 .vscode/
 docker-compose.yml
 
-/src/main/frontend/
+/src/main/frontend/generated/
+/src/main/frontend/index.html
 /node_modules
 /nginx/secrets
 

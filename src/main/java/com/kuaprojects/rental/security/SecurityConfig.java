@@ -26,7 +26,7 @@ public class SecurityConfig extends VaadinWebSecurity {
         var configuredHttp = http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
-                    authorizationManagerRequestMatcherRegistry.requestMatchers( "/api/**", "/api", "/ui", "/ui/**").authenticated();
+                    authorizationManagerRequestMatcherRegistry.requestMatchers( "/api/**", "/api", "/ui", "/ui/**", "/counter").authenticated();
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/public/**", "/login", "/sanityCheck").permitAll();
                 })
                 .httpBasic(withDefaults())
