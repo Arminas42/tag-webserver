@@ -48,30 +48,30 @@ public class LoadDB {
     CommandLineRunner initDatabase(TrailerRepository trailerRepository, RentRepository rentRepository, TagRepository tagRepository, TagDetectionRepository tagDetectionRepository, UserService userService) {
 
         return args -> {
-            var trailer = trailerRepository.save(new Trailer("newTrailer", "TRAILER_200_CM"));
-            log.info("Preloading " + trailer);
-            log.info("Preloading " + trailerRepository.save(new Trailer("Car trailer", "TRAILER_200_CM")));
-            log.info("Preloading " + trailerRepository.save(new Trailer("Trailer with tent", "TRAILER_WITH_TENT_200_CM")));
-            log.info("Preloading " + trailerRepository.save(new Trailer("Car trawl", "TRAWL_BIG")));
-            log.info("Preloading " + trailerRepository.save(new Trailer("Car trawl", "TRAWL_SMALL")));
-            log.info("Preloading " + tagRepository.save(new Tag("Tag with no trailer")));
-            log.info("Preloading " + tagRepository.save(new Tag("Tag with trailer", trailer)));
-
-            log.info("Preloading rent: " + rentRepository.save(Rent.builder()
-                    .driverCarLicensePlate("GGG 222")
-                    .driverFullName("John Smith")
-                    .rentStartTimestamp(LocalDateTime.now().minusHours(2))
-                    .rentedTrailer(trailer)
-                    .status(RentStatus.IN_PROCESS)
-                    .build()));
-            log.info("Preloading rent: " + rentRepository.save(Rent.builder()
-                    .driverCarLicensePlate("DDD 222")
-                    .driverFullName("John Smith")
-                    .rentStartTimestamp(LocalDateTime.now().minusHours(5))
-                    .rentEndTimestamp(LocalDateTime.now().minusHours(3))
-                    .rentedTrailer(trailer)
-                    .status(RentStatus.ENDED)
-                    .build()));
+//            var trailer = trailerRepository.save(new Trailer("newTrailer", "TRAILER_200_CM"));
+//            log.info("Preloading " + trailer);
+//            log.info("Preloading " + trailerRepository.save(new Trailer("Car trailer", "TRAILER_200_CM")));
+//            log.info("Preloading " + trailerRepository.save(new Trailer("Trailer with tent", "TRAILER_WITH_TENT_200_CM")));
+//            log.info("Preloading " + trailerRepository.save(new Trailer("Car trawl", "TRAWL_BIG")));
+//            log.info("Preloading " + trailerRepository.save(new Trailer("Car trawl", "TRAWL_SMALL")));
+//            log.info("Preloading " + tagRepository.save(new Tag("Tag with no trailer")));
+//            log.info("Preloading " + tagRepository.save(new Tag("Tag with trailer", trailer)));
+//
+//            log.info("Preloading rent: " + rentRepository.save(Rent.builder()
+//                    .driverCarLicensePlate("GGG 222")
+//                    .driverFullName("John Smith")
+//                    .rentStartTimestamp(LocalDateTime.now().minusHours(2))
+//                    .rentedTrailer(trailer)
+//                    .status(RentStatus.IN_PROCESS)
+//                    .build()));
+//            log.info("Preloading rent: " + rentRepository.save(Rent.builder()
+//                    .driverCarLicensePlate("DDD 222")
+//                    .driverFullName("John Smith")
+//                    .rentStartTimestamp(LocalDateTime.now().minusHours(5))
+//                    .rentEndTimestamp(LocalDateTime.now().minusHours(3))
+//                    .rentedTrailer(trailer)
+//                    .status(RentStatus.ENDED)
+//                    .build()));
             log.info("Preloading fake tags");
             preloadFakeTags(tagDetectionRepository);
             log.info("Preloading tag detections");

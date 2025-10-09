@@ -4,6 +4,9 @@
   "type": "module",
   "dependencies": {
     "@polymer/polymer": "3.5.1",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tailwindcss/vite": "^4.1.14",
+    "@tanstack/react-table": "^8.21.3",
     "@vaadin/bundles": "24.4.0",
     "@vaadin/common-frontend": "0.0.19",
     "@vaadin/hilla-file-router": "24.4.2",
@@ -23,13 +26,19 @@
     "@vaadin/vaadin-themable-mixin": "24.4.0",
     "@vaadin/vaadin-usage-statistics": "2.1.2",
     "apexcharts": "3.49.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
     "lit": "3.1.4",
+    "lucide-react": "^0.545.0",
     "onecolor": "4.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-router-dom": "6.23.1"
+    "react-router-dom": "6.23.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.14",
+    "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
     "@babel/preset-react": "7.24.7",
@@ -119,7 +128,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "404247c23d607b45d36f27592ebc5f2b684a019b6c9c5d7da537806934bc24df"
+    "hash": "2687284dc625d608136b3440a1eb98814d8452f22de6df07f23db700e0d6f8da"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -148,6 +157,15 @@
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "onecolor": "$onecolor",
-    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles"
+    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
+    "class-variance-authority": "$class-variance-authority",
+    "clsx": "$clsx",
+    "lucide-react": "$lucide-react",
+    "tailwind-merge": "$tailwind-merge",
+    "tw-animate-css": "$tw-animate-css",
+    "@radix-ui/react-slot": "$@radix-ui/react-slot",
+    "@tailwindcss/vite": "$@tailwindcss/vite",
+    "tailwindcss": "$tailwindcss",
+    "@tanstack/react-table": "$@tanstack/react-table"
   }
 }
