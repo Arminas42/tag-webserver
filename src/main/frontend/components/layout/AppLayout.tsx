@@ -13,7 +13,6 @@ type AppLayoutProps = {
 };
 
 const defaultTabs: Tab[] = [
-    { path: '/counter', label: 'Counter' },
     { path: '/overview', label: 'Overview' },
 ];
 
