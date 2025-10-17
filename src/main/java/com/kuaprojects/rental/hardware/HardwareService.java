@@ -11,7 +11,7 @@ public class HardwareService {
     public HardwareService(HardwareRepository hardwareRepository) {
         this.hardwareRepository = hardwareRepository;
     }
-
+    //TODO: implement hardware types
     public void updateLastCheckedIn(String hardwareCode, LocalDateTime timeOfCheckingIn){
         var hardware = hardwareRepository.findByHardwareCode(hardwareCode);
         hardware.ifPresent(hardwareObj -> {

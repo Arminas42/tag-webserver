@@ -1,15 +1,10 @@
 package com.kuaprojects.rental.tag;
 
-import com.kuaprojects.rental.rent.Rent;
-import com.kuaprojects.rental.rent.RentRepository;
-import com.kuaprojects.rental.rent.RentStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
