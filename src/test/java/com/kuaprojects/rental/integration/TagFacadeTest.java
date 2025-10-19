@@ -1,9 +1,7 @@
 package com.kuaprojects.rental.integration;
 
-import com.kuaprojects.rental.tag.TagDetection;
-import com.kuaprojects.rental.tag.TagDetectionFacade;
-import com.kuaprojects.rental.tag.TagDetectionRepository;
-import com.kuaprojects.rental.tag.TagVacantRepository;
+import com.kuaprojects.rental.tag.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -34,8 +33,8 @@ public class TagFacadeTest {
         // Arrange
         String tagCode = "TAG_1";
         LocalDateTime start = LocalDateTime.of(2025, 5, 15, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2025, 5, 15, 23, 59);
-        LocalDateTime dayEndTime = LocalDateTime.of(2025, 5, 15, 23, 59); // When device scanning hours have ended
+        LocalDateTime endScanningTime = LocalDateTime.of(2025, 5, 15, 23, 59);
+        LocalDateTime businessDeadline = LocalDateTime.of(2025, 5, 15, 23, 59); // When device scanning hours have ended
 
         List<TagDetection> input = List.of(
                 new TagDetection(1L, tagCode, LocalDateTime.of(2025, 5, 15, 12, 0)),   // Same day
@@ -58,11 +57,93 @@ public class TagFacadeTest {
             tagDetectionRepository.save(tagDetection);
         }
         // Act
-        tagDetectionFacade.processDetections(start, end, dayEndTime);
+        tagDetectionFacade.processDetections(start, endScanningTime, businessDeadline);
         // Assert
         //Gets only three because of end null of the last tag
-        var result = tagVacantRepository.findByTagCodeAndVacantFromBetween(tagCode, start, end);
+        var result = tagVacantRepository.findByTagCodeAndVacantToBetween(tagCode, start, endScanningTime);
         assertEquals(4, result.size());
     }
+    @Test
+    public void testEndingOfOngoingVacancy_onlyOneDetection() {
+        // Arrange
+        String tagCode = "TAG_2";
+        LocalDateTime dayBeforeStart = LocalDateTime.of(2025, 6, 14, 0, 0);
+        LocalDateTime start = LocalDateTime.of(2025, 6, 15, 0, 0);
+        LocalDateTime scanningEndTime = LocalDateTime.of(2025, 6, 15, 23, 59);
+        LocalDateTime businessDeadline = LocalDateTime.of(2025, 6, 15, 20, 00); // When device scanning hours have ended
 
+        List<TagDetection> input = List.of(
+                new TagDetection(1L, tagCode, LocalDateTime.of(2025, 6, 15, 12, 0))
+        );
+
+//        when(tagDetectionRepository.findByDetectionTimeBetween(start, end)).thenReturn(mockResult);
+        // Setup
+        for (TagDetection tagDetection:input) {
+            tagDetectionRepository.save(tagDetection);
+        }
+        tagVacantRepository.save(TagVacant.builder()
+                        .tagCode(tagCode)
+                        .status(ProcessingStatus.STILL_VACANT)
+                        .vacantFrom(dayBeforeStart)
+                        .vacantTo(null)
+                .build());
+        // Act
+        tagDetectionFacade.processDetections(start, scanningEndTime, businessDeadline);
+        // Assert
+        var result = tagVacantRepository.findByTagCodeAndVacantToBetween(tagCode, start, businessDeadline);
+        var firstVacancy = result.getFirst();
+        assertEquals(1, result.size());
+        assertEquals(ProcessingStatus.ENDED, firstVacancy.getStatus());
+        assertTrue(ObjectUtils.isNotEmpty(firstVacancy.getVacantTo()));
+        assertEquals(LocalDateTime.of(2025, 6, 15, 12, 0), firstVacancy.getVacantTo());
+        // Check if STILL_VACANT is saved
+        var resultStillVacant = tagVacantRepository.findByTagCodeAndVacantFromBetween(tagCode, start, businessDeadline);
+        var stillVacant = resultStillVacant.getFirst();
+        assertEquals(1, resultStillVacant.size());
+        assertEquals(ProcessingStatus.STILL_VACANT, stillVacant.getStatus());
+    }
+
+    @Test
+    public void testProcessTags_edgeCases() {
+        // Arrange
+        String tagCode = "TAG_3";
+        LocalDateTime start = LocalDateTime.of(2025, 7, 15, 8, 0);
+        LocalDateTime dayBeforeStart = start.minusDays(1);
+        LocalDateTime businessDeadline = LocalDateTime.of(2025, 7, 15, 20, 00);
+        LocalDateTime endScanningTime = LocalDateTime.of(2025, 7, 15, 23, 59);
+
+        LocalDateTime tagDetectionTime = LocalDateTime.of(2025, 7, 15, 12, 0);
+
+        List<TagDetection> input = List.of(
+                new TagDetection(1L, tagCode, tagDetectionTime),
+                new TagDetection(2L, tagCode, tagDetectionTime.plusMinutes(5)),
+                new TagDetection(4L, tagCode, tagDetectionTime.plusMinutes(16)),
+                new TagDetection(9L, tagCode, tagDetectionTime.plusMinutes(18)),
+                new TagDetection(10L, tagCode, tagDetectionTime.plusMinutes(60)),
+                new TagDetection(11L, tagCode, tagDetectionTime.plusMinutes(120)),
+                new TagDetection(12L, tagCode, tagDetectionTime.plusMinutes(130)),
+                new TagDetection(13L, tagCode, businessDeadline.minusMinutes(1)),
+                new TagDetection(14L, tagCode, businessDeadline.plusMinutes(10)), // detections after business deadline should not be considered
+                new TagDetection(15L, tagCode, businessDeadline.plusMinutes(50)) // detections after business deadline should not be considered
+        );
+
+//        when(tagDetectionRepository.findByDetectionTimeBetween(start, end)).thenReturn(mockResult);
+        // Setup
+        for (TagDetection tagDetection:input) {
+            tagDetectionRepository.save(tagDetection);
+        }
+        tagVacantRepository.save(TagVacant.builder()
+                .id(16L)
+                .tagCode(tagCode)
+                .status(ProcessingStatus.STILL_VACANT)
+                .vacantFrom(dayBeforeStart)
+                .vacantTo(null)
+                .build());
+        // Act
+        tagDetectionFacade.processDetections(start, endScanningTime, businessDeadline);
+        // Assert
+        //Gets only three because of end null of the last tag
+        var result = tagVacantRepository.findByTagCodeAndVacantToBetween(tagCode, start, endScanningTime);
+        assertEquals(6, result.size());
+    }
 }

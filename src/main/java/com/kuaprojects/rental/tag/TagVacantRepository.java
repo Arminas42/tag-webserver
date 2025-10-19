@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TagVacantRepository extends JpaRepository<TagVacant, Long> {
     List<TagVacant> findByTagCodeAndVacantFromBetween(String tagCode, LocalDateTime start, LocalDateTime end);
+    List<TagVacant> findByTagCodeAndVacantToBetween(String tagCode, LocalDateTime start, LocalDateTime end);
 
     List<TagVacant> findByTagCodeInAndVacantFromBetween(List<String> tagCodes, LocalDateTime start, LocalDateTime end);
 

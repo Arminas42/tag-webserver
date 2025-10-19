@@ -23,5 +23,11 @@ public class TagDetection {
     private Long id;
     private String tagCode;
     private LocalDateTime detectionTime;
+    private boolean softDelete = false;
 
+    public TagDetection(Long id , String tagCode, LocalDateTime detectionTime) {
+        this.detectionTime = detectionTime;
+        this.tagCode = tagCode;
+        this.id = id;
+    }
 }
